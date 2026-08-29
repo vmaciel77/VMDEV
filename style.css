@@ -40,6 +40,103 @@ html.dark {
     --dark-section-bg: #070d18;
 }
 
+/* ================= MOTOR 3D GLOBAL =================
+   Variáveis controladas via JS (tilt de cursor) e usadas
+   pelos cards/imagem para criar profundidade real (rotação
+   em X/Y + translação em Z), não apenas sombra falsa.
+*/
+:root {
+    --tilt-x: 0deg;
+    --tilt-y: 0deg;
+    --tilt-z: 0px;
+    --glow-x: 50%;
+    --glow-y: 50%;
+}
+
+body {
+    perspective: 1600px;
+}
+
+/* ================= ACESSIBILIDADE: SKIP LINK ================= */
+
+.skip-link {
+    position: absolute;
+
+    top: -60px;
+    left: 10px;
+
+    z-index: 2000;
+
+    padding: 10px 18px;
+
+    border-radius: 8px;
+
+    background: #1769ff;
+    color: white;
+
+    font-weight: 700;
+    font-size: 14px;
+
+    transition: top 0.25s ease;
+}
+
+.skip-link:focus {
+    top: 10px;
+}
+
+/* Foco visível para navegação por teclado em toda a página */
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid #1769ff;
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* ================= BOTÃO VOLTAR AO TOPO ================= */
+
+.back-to-top {
+    position: fixed;
+
+    right: 24px;
+    bottom: 24px;
+
+    width: 46px;
+    height: 46px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #1769ff;
+    color: white;
+
+    font-size: 16px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 10px 25px rgba(23, 105, 255, 0.35);
+
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(15px) scale(0.9);
+
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
+    z-index: 900;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+.back-to-top:hover {
+    transform: translateY(-4px) scale(1.05);
+}
+
 /* Suave transição ao alternar o tema */
 body,
 .header,
@@ -129,10 +226,18 @@ ul {
     height: 75px;
 
     background: var(--header-bg);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
 
     border-bottom: 1px solid var(--header-border);
 
     z-index: 1000;
+
+    transition: box-shadow 0.4s ease, background 0.3s;
+}
+
+.header.scrolled {
+    box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.25);
 }
 
 .nav {
@@ -180,6 +285,10 @@ ul {
 }
 
 .menu a:hover {
+    color: #1769ff;
+}
+
+.menu a.active {
     color: #1769ff;
 }
 
@@ -286,6 +395,47 @@ ul {
     flex-wrap: wrap;
 }
 
+/* ---- Sequência de entrada do hero ao carregar a página ---- */
+
+@keyframes heroIn {
+    from {
+        opacity: 0;
+        transform: perspective(900px) translateY(28px) rotateX(10deg);
+    }
+    to {
+        opacity: 1;
+        transform: perspective(900px) translateY(0) rotateX(0deg);
+    }
+}
+
+.hero .tag         { animation: heroIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both; }
+.hero h1            { animation: heroIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
+.hero h2            { animation: heroIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both; }
+.hero p             { animation: heroIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both; }
+.hero .hero-buttons { animation: heroIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both; }
+.hero .socials      { animation: heroIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both; }
+.hero .image-container { animation: heroIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both; }
+
+
+@keyframes floatY {
+    0%, 100% { transform:
+        rotateX(calc(var(--tilt-y) * -1))
+        rotateY(var(--tilt-x))
+        translateZ(20px)
+        translateY(0);
+    }
+    50% { transform:
+        rotateX(calc(var(--tilt-y) * -1))
+        rotateY(var(--tilt-x))
+        translateZ(20px)
+        translateY(-14px);
+    }
+}
+
+@keyframes orbitSpin {
+    to { transform: rotate(360deg); }
+}
+
 
 /* ================= BUTTONS ================= */
 
@@ -303,18 +453,29 @@ ul {
 
     font-weight: 700;
 
-    transition: 0.3s;
+    transform-style: preserve-3d;
+    transform: translateZ(0);
+
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s;
 }
 
 .btn.primary {
     background: #1769ff;
     color: white;
+
+    box-shadow: 0 4px 0 #0e4bc4, 0 6px 14px rgba(23, 105, 255, 0.25);
 }
 
 .btn.primary:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px) translateZ(10px);
 
-    box-shadow: 0 10px 25px rgba(23, 105, 255, 0.25);
+    box-shadow: 0 8px 0 #0e4bc4, 0 20px 30px rgba(23, 105, 255, 0.3);
+}
+
+.btn.primary:active {
+    transform: translateY(0) translateZ(0);
+
+    box-shadow: 0 2px 0 #0e4bc4, 0 4px 10px rgba(23, 105, 255, 0.25);
 }
 
 .btn.secondary {
@@ -323,12 +484,24 @@ ul {
     color: var(--text);
 
     background: var(--btn-secondary-bg);
+
+    box-shadow: 0 4px 0 var(--border), 0 6px 14px rgba(0, 0, 0, 0.06);
 }
 
 .btn.secondary:hover {
     border-color: #1769ff;
 
     color: #1769ff;
+
+    transform: translateY(-4px) translateZ(10px);
+
+    box-shadow: 0 8px 0 #1769ff, 0 20px 30px rgba(23, 105, 255, 0.15);
+}
+
+.btn.secondary:active {
+    transform: translateY(0) translateZ(0);
+
+    box-shadow: 0 2px 0 var(--border), 0 4px 10px rgba(0, 0, 0, 0.06);
 }
 
 
@@ -371,15 +544,63 @@ ul {
 
 /* ================= PROFILE ================= */
 
-.hero-image {
+.hero-image,
+.image-container {
     display: flex;
 
     justify-content: center;
+
+    perspective: 1200px;
+}
+
+/* Anel externo: gira continuamente em 3D, criando profundidade real
+   (não é só decoração 2D — a borda "orbita" atrás da foto) */
+.image-container {
+    position: relative;
+}
+
+.image-container::before {
+    content: "";
+
+    position: absolute;
+    inset: -18px;
+
+    border-radius: 50%;
+
+    background: conic-gradient(
+        from 0deg,
+        #1769ff,
+        transparent 30%,
+        transparent 70%,
+        #1769ff
+    );
+
+    opacity: 0.55;
+
+    animation: orbitSpin 7s linear infinite;
+
+    transform-style: preserve-3d;
+}
+
+.image-container::after {
+    content: "";
+
+    position: absolute;
+    inset: 6px;
+
+    border-radius: 50%;
+
+    background: var(--bg);
+
+    z-index: 0;
 }
 
 .image-border {
     width: 300px;
     height: 300px;
+
+    position: relative;
+    z-index: 1;
 
     border-radius: 50%;
 
@@ -387,7 +608,18 @@ ul {
 
     border: 2px solid #1769ff;
 
-    transform: rotate(5deg);
+    transform-style: preserve-3d;
+
+    transform:
+        rotateX(calc(var(--tilt-y) * -1))
+        rotateY(var(--tilt-x))
+        translateZ(20px);
+
+    transition: transform 0.15s ease-out;
+
+    animation: floatY 5s ease-in-out infinite;
+
+    will-change: transform;
 }
 
 .profile-placeholder {
@@ -420,7 +652,9 @@ ul {
 
     overflow: hidden;
 
-    transform: rotate(-5deg);
+    box-shadow:
+        0 25px 45px -15px rgba(23, 105, 255, 0.35),
+        0 10px 20px -8px rgba(0, 0, 0, 0.25);
 }
 
 .profile-photo img {
@@ -432,6 +666,12 @@ ul {
     object-fit: cover;
 
     object-position: center;
+
+    transition: transform 0.4s ease;
+}
+
+.image-border:hover .profile-photo img {
+    transform: scale(1.06);
 }
 
 
@@ -440,6 +680,50 @@ ul {
 .section {
     padding: 100px 0;
 }
+
+/* Revelação com profundidade: a seção "sobe do fundo" da tela em
+   vez de só entrar em fade. O JS (.show) já dispara isso via
+   IntersectionObserver — aqui é onde o efeito realmente existe. */
+.section {
+    opacity: 0;
+
+    transform: perspective(1200px) translateY(60px) rotateX(8deg);
+    transform-origin: bottom center;
+
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.section.show {
+    opacity: 1;
+
+    transform: perspective(1200px) translateY(0) rotateX(0deg);
+}
+
+/* Itens dos grids aparecem em cascata quando a seção entra em cena */
+.skills > *,
+.projects > *,
+.services > * {
+    opacity: 0;
+
+    transform: translateY(30px) scale(0.96);
+
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.section.show .skills > *,
+.section.show .projects > *,
+.section.show .services > * {
+    opacity: 1;
+
+    transform: translateY(0) scale(1);
+}
+
+.skills > *:nth-child(1), .projects > *:nth-child(1), .services > *:nth-child(1) { transition-delay: 0.05s; }
+.skills > *:nth-child(2), .projects > *:nth-child(2), .services > *:nth-child(2) { transition-delay: 0.15s; }
+.skills > *:nth-child(3), .projects > *:nth-child(3), .services > *:nth-child(3) { transition-delay: 0.25s; }
+.skills > *:nth-child(4), .projects > *:nth-child(4), .services > *:nth-child(4) { transition-delay: 0.35s; }
+.skills > *:nth-child(5), .projects > *:nth-child(5), .services > *:nth-child(5) { transition-delay: 0.45s; }
+.skills > *:nth-child(6), .projects > *:nth-child(6), .services > *:nth-child(6) { transition-delay: 0.55s; }
 
 .dark-section {
     background: var(--dark-section-bg);
@@ -504,9 +788,54 @@ ul {
 
     background: var(--card-bg);
 
-    border-radius: 15px;
-
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+
+    position: relative;
+    overflow: hidden;
+
+    transform-style: preserve-3d;
+
+    transform:
+        perspective(900px)
+        rotateX(var(--tilt-y))
+        rotateY(var(--tilt-x));
+
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.3s;
+}
+
+.about-card:hover {
+    box-shadow: 0 25px 45px -15px rgba(23, 105, 255, 0.2);
+
+    border-color: #1769ff;
+}
+
+/* Brilho que segue o cursor (spotlight) */
+.about-card::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background: radial-gradient(
+        circle at var(--glow-x) var(--glow-y),
+        rgba(23, 105, 255, 0.15),
+        transparent 45%
+    );
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease;
+
+    pointer-events: none;
+}
+
+.about-card:hover::before {
+    opacity: 1;
+}
+
+.about-card > * {
+    position: relative;
+    transform: translateZ(30px);
 }
 
 .info {
@@ -595,13 +924,51 @@ ul {
 
     border-radius: 12px;
 
-    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+
+    transform-style: preserve-3d;
+
+    transform:
+        perspective(900px)
+        rotateX(var(--tilt-y))
+        rotateY(var(--tilt-x));
+
+    transition: transform 0.25s ease, border-color 0.3s, box-shadow 0.3s;
 }
 
 .skill:hover {
-    transform: translateY(-5px);
-
     border-color: #1769ff;
+
+    box-shadow: 0 20px 40px -18px rgba(23, 105, 255, 0.35);
+}
+
+.skill::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background: radial-gradient(
+        circle at var(--glow-x) var(--glow-y),
+        rgba(23, 105, 255, 0.18),
+        transparent 45%
+    );
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease;
+
+    pointer-events: none;
+}
+
+.skill:hover::before {
+    opacity: 1;
+}
+
+.skill > * {
+    position: relative;
+    transform: translateZ(25px);
 }
 
 .skill > i {
@@ -610,6 +977,12 @@ ul {
     color: #1769ff;
 
     margin-bottom: 18px;
+
+    transition: transform 0.3s ease;
+}
+
+.skill:hover > i {
+    transform: translateZ(40px) scale(1.12);
 }
 
 .skill h3 {
@@ -640,13 +1013,51 @@ ul {
 
     border-radius: 12px;
 
-    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+
+    transform-style: preserve-3d;
+
+    transform:
+        perspective(900px)
+        rotateX(var(--tilt-y))
+        rotateY(var(--tilt-x));
+
+    transition: transform 0.25s ease, box-shadow 0.3s, border-color 0.3s;
 }
 
 .project:hover {
-    transform: translateY(-7px);
+    box-shadow: 0 25px 50px -20px rgba(23, 105, 255, 0.3);
 
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    border-color: #1769ff;
+}
+
+.project::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background: radial-gradient(
+        circle at var(--glow-x) var(--glow-y),
+        rgba(23, 105, 255, 0.14),
+        transparent 45%
+    );
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease;
+
+    pointer-events: none;
+}
+
+.project:hover::before {
+    opacity: 1;
+}
+
+.project > * {
+    position: relative;
+    transform: translateZ(25px);
 }
 
 .project-top {
@@ -731,6 +1142,52 @@ ul {
     border: 1px solid #273247;
 
     border-radius: 12px;
+
+    position: relative;
+    overflow: hidden;
+
+    transform-style: preserve-3d;
+
+    transform:
+        perspective(900px)
+        rotateX(var(--tilt-y))
+        rotateY(var(--tilt-x));
+
+    transition: transform 0.25s ease, border-color 0.3s, box-shadow 0.3s;
+}
+
+.service:hover {
+    border-color: #1769ff;
+
+    box-shadow: 0 20px 40px -18px rgba(23, 105, 255, 0.3);
+}
+
+.service::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background: radial-gradient(
+        circle at var(--glow-x) var(--glow-y),
+        rgba(23, 105, 255, 0.16),
+        transparent 45%
+    );
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease;
+
+    pointer-events: none;
+}
+
+.service:hover::before {
+    opacity: 1;
+}
+
+.service > * {
+    position: relative;
+    transform: translateZ(20px);
 }
 
 .service > i {
@@ -739,6 +1196,12 @@ ul {
     color: #1769ff;
 
     margin-bottom: 20px;
+
+    transition: transform 0.3s ease;
+}
+
+.service:hover > i {
+    transform: translateZ(35px) scale(1.1);
 }
 
 .service h3 {
@@ -990,4 +1453,47 @@ footer {
         text-align: center;
     }
 
+}
+
+
+/* ================= 3D DESLIGADO EM TELAS PEQUENAS =================
+   Tilt de cursor não faz sentido no toque; mantém só as entradas
+   suaves e a orbita da foto, sem o rotateX/rotateY por ponteiro. */
+@media (hover: none), (max-width: 900px) {
+    .about-card,
+    .skill,
+    .project,
+    .service {
+        transform: none !important;
+    }
+
+    .image-border {
+        transform: translateZ(0) !important;
+    }
+}
+
+
+/* ================= RESPEITA MENOS MOVIMENTO ================= */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .section {
+        opacity: 1;
+        transform: none;
+    }
+
+    .skills > *,
+    .projects > *,
+    .services > * {
+        opacity: 1;
+        transform: none;
+    }
 }
