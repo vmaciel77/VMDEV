@@ -9,6 +9,18 @@
       content="Portfólio de Vítor Maciel - Estudante de Sistemas de Informação e desenvolvedor em formação."
     />
 
+    <!-- Compartilhamento em redes sociais (WhatsApp, LinkedIn, etc.) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Vítor Maciel | Desenvolvedor" />
+    <meta
+      property="og:description"
+      content="Portfólio de Vítor Maciel - Estudante de Sistemas de Informação e desenvolvedor em formação."
+    />
+    <meta property="og:image" content="Imagens/minha foto.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" type="image/svg+xml" href="Imagens/logo.svg" />
+
     <title>Vítor Maciel | Desenvolvedor</title>
 
     <link rel="stylesheet" href="style.css" />
@@ -21,21 +33,28 @@
   </head>
 
   <body>
+    <a href="#inicio" class="skip-link">Pular para o conteúdo</a>
+
     <!-- ================= HEADER ================= -->
 
     <header class="header">
       <div class="container nav">
         <a href="#inicio" class="logo">
-          <img src="Imagens/logo.svg" alt="Logo VM - Vítor Maciel" />
+          <img
+            src="Imagens/logo.svg"
+            alt="Logo VM - Vítor Maciel"
+            width="42"
+            height="42"
+          />
         </a>
 
         <nav class="menu" id="menu">
-          <a href="#inicio">Início</a>
-          <a href="#sobre">Sobre</a>
-          <a href="#habilidades">Habilidades</a>
-          <a href="#projetos">Projetos</a>
-          <a href="#servicos">Serviços</a>
-          <a href="#contato">Contato</a>
+          <a href="#inicio" data-nav-link>Início</a>
+          <a href="#sobre" data-nav-link>Sobre</a>
+          <a href="#habilidades" data-nav-link>Habilidades</a>
+          <a href="#projetos" data-nav-link>Projetos</a>
+          <a href="#servicos" data-nav-link>Serviços</a>
+          <a href="#contato" data-nav-link>Contato</a>
         </nav>
 
         <div class="nav-actions">
@@ -87,22 +106,39 @@
             </div>
 
             <div class="socials">
-              <a href="https://github.com/vmaciel77" target="_blank">
+              <a
+                href="https://github.com/vmaciel77"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub de Vítor Maciel"
+              >
                 <i class="fa-brands fa-github"></i>
               </a>
 
               <a
-                href="www.linkedin.com/in/vitor-maciel-ab332a342"
+                href="https://www.linkedin.com/in/vitor-maciel-ab332a342"
                 target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn de Vítor Maciel"
               >
                 <i class="fa-brands fa-linkedin"></i>
               </a>
 
-              <a href="https://www.instagram.com/v.maciel.77" target="_blank">
+              <a
+                href="https://www.instagram.com/v.maciel.77"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram de Vítor Maciel"
+              >
                 <i class="fa-brands fa-instagram"></i>
               </a>
 
-              <a href="https://www.tiktok.com/@v.maciel.77" target="_blank">
+              <a
+                href="https://www.tiktok.com/@v.maciel.77"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok de Vítor Maciel"
+              >
                 <i class="fa-brands fa-tiktok"></i>
               </a>
             </div>
@@ -111,7 +147,13 @@
           <div class="image-container">
             <div class="image-border">
               <div class="profile-photo">
-                <img src="Imagens/minha foto.jpg" alt="Foto de Vítor Maciel" />
+                <img
+                  src="Imagens/minha foto.jpg"
+                  alt="Foto de Vítor Maciel"
+                  width="300"
+                  height="300"
+                  loading="eager"
+                />
               </div>
             </div>
           </div>
@@ -195,7 +237,7 @@
             Tecnologias que estou estudando e utilizando nos meus projetos.
           </p>
 
-          <div class="skills">
+          <class="skills">
             <div class="skill">
               <i class="fa-brands fa-html5"></i>
               <h3>HTML5</h3>
@@ -230,6 +272,11 @@
               <i class="fa-brands fa-github"></i>
               <h3>Git & GitHub</h3>
               <p>Versionamento e gerenciamento de projetos.</p>
+            </div>
+            <div class="skill">
+              <i class="fa-solid fa-network-wired"></i>
+              <h3>Redes de Computadores</h3>
+              <p>Configuração e manutenção de redes para conectar dispositivos e compartilhar dados e recursos com segurança.</p>
             </div>
           </div>
         </div>
@@ -420,14 +467,20 @@
             <a
               href="https://wa.me/5579998554514"
               target="_blank"
+              rel="noopener noreferrer"
               class="btn primary"
+              aria-label="Falar com Vítor Maciel no WhatsApp"
             >
               <i class="fa-brands fa-whatsapp"></i>
 
               WhatsApp
             </a>
 
-            <a href="mendonçavitor090@gmail,com" class="btn secondary">
+            <a
+              href="mailto:mendoncavitor090@gmail.com"
+              class="btn secondary"
+              aria-label="Enviar e-mail para Vítor Maciel"
+            >
               <i class="fa-solid fa-envelope"></i>
 
               E-mail
@@ -443,26 +496,52 @@
       <div class="container footer-content">
         <div>
           <a href="#inicio" class="logo">
-            <img src="Imagens/logo.svg" alt="Logo VM - Vítor Maciel" />
+            <img
+              src="Imagens/logo.svg"
+              alt="Logo VM - Vítor Maciel"
+              width="42"
+              height="42"
+              loading="lazy"
+            />
           </a>
 
           <p>Desenvolvendo ideias através da tecnologia.</p>
         </div>
 
         <div class="footer-socials">
-          <a href="https://github.com/vmaciel" target="_blank">
+          <a
+            href="https://github.com/vmaciel77"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub de Vítor Maciel"
+          >
             <i class="fa-brands fa-github"></i>
           </a>
 
-          <a href="https://www.linkedin.com/in/vitor-maciel/" target="_blank">
+          <a
+            href="https://www.linkedin.com/in/vitor-maciel-ab332a342"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn de Vítor Maciel"
+          >
             <i class="fa-brands fa-linkedin"></i>
           </a>
 
-          <a href="https://www.instagram.com/v.maciel.77/" target="_blank">
+          <a
+            href="https://www.instagram.com/v.maciel.77/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram de Vítor Maciel"
+          >
             <i class="fa-brands fa-instagram"></i>
           </a>
 
-          <a href="https://www.tiktok.com/@v.maciel.dev" target="_blank">
+          <a
+            href="https://www.tiktok.com/@v.maciel.77"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="TikTok de Vítor Maciel"
+          >
             <i class="fa-brands fa-tiktok"></i>
           </a>
         </div>
@@ -475,6 +554,16 @@
       </div>
     </footer>
 
+    <button
+      id="back-to-top"
+      class="back-to-top"
+      aria-label="Voltar ao topo"
+      title="Voltar ao topo"
+    >
+      <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
     <script src="javascript.js"></script>
   </body>
 </html>
+
